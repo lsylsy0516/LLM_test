@@ -1,16 +1,22 @@
 # run_detection.py
 import argparse
-from yolov5.detect import main, parse_opt
+import os
+IFSEG = False
+if IFSEG:
+    from yolov5.segment.predict import main
+else:
+    from yolov5.detect import main
 
 def set_detection_parameters(input_source:str,dir:str):
     # 创建解析器
     parser = argparse.ArgumentParser()
-    
+    if IFSEG:
+        parser.add_argument('--weights', nargs='+', type=str, default='yolov5m-seg.pt', help='model path(s)')
+    else:
+        parser.add_argument('--weights', nargs='+', type=str, default='yolov5m.pt', help='model path(s)')
     # 添加参数
-    parser.add_argument('--weights', nargs='+', type=str, default='yolov5m.pt', help='model path(s)')
     parser.add_argument('--data', type=str, default='data/coco128.yaml', help='(optional) dataset.yaml path')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
-    parser.add_argument('--conf-thres', type=float, default=0.4, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
     parser.add_argument('--max-det', type=int, default=1000, help='maximum detections per image')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -30,16 +36,15 @@ def set_detection_parameters(input_source:str,dir:str):
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
     parser.add_argument('--vid-stride', type=int, default=1, help='video frame-rate stride')
     
+    parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
+    parser.add_argument('--line-thickness', default=1, type=int, help='bounding box thickness (pixels)')
     parser.add_argument('--project', default='new_result', help='save results to project/name')
     parser.add_argument('--name', default=dir, help='save results to project/name')
-    parser.add_argument('--line-thickness', default=1, type=int, help='bounding box thickness (pixels)')
     parser.add_argument('--classes',default='0',nargs='+', type=int, help='filter by class: --classes 0, or --classes 0 2 3')
     parser.add_argument('--source', type=str, default=input_source, help='file/dir/URL/glob, 0 for webcam')
 
     # 解析参数
     opt = parser.parse_args()
-    
-    # 扩展imgsz参数
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1
     return opt
 

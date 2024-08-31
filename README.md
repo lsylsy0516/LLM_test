@@ -10,7 +10,7 @@ pip install -r ./yolov5/requirements.txt
 pip install openai  # 3.8
 pip install anthropic
 pip install socksio
-pip install google-generativeai # 3.9 +
+pip install google-generativeai # 3.9 
 ```
 ### 3. Use YOLOv5 to create mask images
 ```bash
