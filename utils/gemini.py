@@ -35,7 +35,7 @@ For example, you can return '''Group(\d+):([\d,]+)'''
 
 #gemini-1.5-pro-latest
 #gemini-pro-vision
-API_KEY = "AIzaSyC1ILgJZ-P0fZX_UVyiQ0HuXeMwQ6sqAiQ"
+API_KEY = os.environ['GEMINI_API_KEY']
 #os.environ['API_KEY'] = userdata.get('API_KEY')
 pattern = r'(\d+):( walking| talking| queuing| photographing| posing| sitting| working)'#后续加上更多分类
 group_pattern = r'group( \d+):([ \d,]+)'
