@@ -20,8 +20,9 @@ for root, dirs, files in os.walk(all_image_path):
                         continue
                     img = cv2.imread(file_path)
                     cv2.imshow(f'file_path', img)
-                    cv2.waitKey(10)
+                    cv2.waitKey(50)
                     # 获取用户输入
+                    print(f"Loading image: {file_path}")
                     user_input = input("请输入坐标，用逗号分隔，然后按回车键: (例如输入: 58 59,60)\n")  
                     # 解析输入，转换成列表形式
                     coordinates = user_input.strip().split(",")
