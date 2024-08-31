@@ -1,0 +1,5 @@
+imgs/*
+new_result/
+*.pt
+*.jpg
+old_utils/*
