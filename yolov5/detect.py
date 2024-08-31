@@ -43,7 +43,8 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
-from ultralytics.utils.plotting import Annotator, colors, save_one_box
+# from ultralytics.utils.plotting import Annotator, colors, save_one_box
+from utils.my_plotting import Annotator, colors, save_one_box
 
 from models.common import DetectMultiBackend
 from utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadScreenshots, LoadStreams
@@ -251,6 +252,7 @@ def run(
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
 
                 # Write results
+                label_counter = 0
                 for *xyxy, conf, cls in reversed(det):
                     c = int(cls)  # integer class
                     label = names[c] if hide_conf else f"{names[c]}"
@@ -273,8 +275,12 @@ def run(
 
                     if save_img or save_crop or view_img:  # Add bbox to image
                         c = int(cls)  # integer class
-                        label = None if hide_labels else (names[c] if hide_conf else f"{names[c]} {conf:.2f}")
+                        # label = None if hide_labels else (names[c] if hide_conf else f"{names[c]} {conf:.2f}")
+                        label = str(label_counter) if not hide_labels else None
+                        print(f"Detected {label} with confidence {confidence_str}")
+                        # print(f"Bbox coordinates: {xyxy}")
                         annotator.box_label(xyxy, label, color=colors(c, True))
+                        label_counter += 1 
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / "crops" / names[c] / f"{p.stem}.jpg", BGR=True)
 

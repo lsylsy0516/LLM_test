@@ -1,7 +1,9 @@
-# run_detection.py
 import argparse
 import os
-IFSEG = False
+
+IFSEG = True
+
+
 if IFSEG:
     from yolov5.segment.predict import main
 else:
@@ -12,6 +14,7 @@ def set_detection_parameters(input_source:str,dir:str):
     parser = argparse.ArgumentParser()
     if IFSEG:
         parser.add_argument('--weights', nargs='+', type=str, default='yolov5m-seg.pt', help='model path(s)')
+        parser.add_argument("--alpha", type=float, default=0.3, help="mask transparency")
     else:
         parser.add_argument('--weights', nargs='+', type=str, default='yolov5m.pt', help='model path(s)')
     # 添加参数
@@ -36,7 +39,7 @@ def set_detection_parameters(input_source:str,dir:str):
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
     parser.add_argument('--vid-stride', type=int, default=1, help='video frame-rate stride')
     
-    parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
+    parser.add_argument('--conf-thres', type=float, default=0.5, help='confidence threshold')
     parser.add_argument('--line-thickness', default=1, type=int, help='bounding box thickness (pixels)')
     parser.add_argument('--project', default='new_result', help='save results to project/name')
     parser.add_argument('--name', default=dir, help='save results to project/name')

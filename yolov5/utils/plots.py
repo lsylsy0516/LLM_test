@@ -148,6 +148,7 @@ def output_to_target(output, max_det=300):
     return torch.cat(targets, 0).numpy()
 
 
+# todo: change for only labels
 @threaded
 def plot_images(images, targets, paths=None, fname="images.jpg", names=None):
     """Plots an image grid with labels from YOLOv5 predictions or targets, saving to `fname`."""
@@ -183,6 +184,7 @@ def plot_images(images, targets, paths=None, fname="images.jpg", names=None):
     # Annotate
     fs = int((h + w) * ns * 0.01)  # font size
     annotator = Annotator(mosaic, line_width=round(fs / 10), font_size=fs, pil=True, example=names)
+    label_counter = 0  # Initialize the label counter
     for i in range(i + 1):
         x, y = int(w * (i // ns)), int(h * (i % ns))  # block origin
         annotator.rectangle([x, y, x + w, y + h], None, (255, 255, 255), width=2)  # borders
@@ -208,8 +210,9 @@ def plot_images(images, targets, paths=None, fname="images.jpg", names=None):
                 color = colors(cls)
                 cls = names[cls] if names else cls
                 if labels or conf[j] > 0.25:  # 0.25 conf thresh
-                    label = f"{cls}" if labels else f"{cls} {conf[j]:.1f}"
+                    label = str(label_counter)  # Convert the counter to a string label
                     annotator.box_label(box, label, color=color)
+                    label_counter += 1
     annotator.im.save(fname)  # save
 
 

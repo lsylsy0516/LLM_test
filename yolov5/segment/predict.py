@@ -42,7 +42,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
-from ultralytics.utils.plotting import Annotator, colors, save_one_box
+from utils.my_plotting import Annotator, colors, save_one_box
 
 from models.common import DetectMultiBackend
 from utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadScreenshots, LoadStreams
@@ -96,6 +96,7 @@ def run(
     dnn=False,  # use OpenCV DNN for ONNX inference
     vid_stride=1,  # video frame-rate stride
     retina_masks=False,
+    alpha=0.5
 ):
     """Run YOLOv5 segmentation inference on diverse sources including images, videos, directories, and streams."""
     source = str(source)
@@ -196,10 +197,13 @@ def run(
                     / 255
                     if retina_masks
                     else im[i],
+                    alpha = alpha,
                 )
 
                 # Write results
+                label_counter = 0
                 for j, (*xyxy, conf, cls) in enumerate(reversed(det[:, :6])):
+                    
                     if save_txt:  # Write to file
                         seg = segments[j].reshape(-1)  # (n,2) to (n*2)
                         line = (cls, *seg, conf) if save_conf else (cls, *seg)  # label format
@@ -208,12 +212,12 @@ def run(
 
                     if save_img or save_crop or view_img:  # Add bbox to image
                         c = int(cls)  # integer class
-                        label = None if hide_labels else (names[c] if hide_conf else f"{names[c]} {conf:.2f}")
+                        # label = None if hide_labels else (names[c] if hide_conf else f"{names[c]} {conf:.2f}")
+                        label = str(label_counter) if not hide_labels else None
                         annotator.box_label(xyxy, label, color=colors(c, True))
-                        # annotator.draw.polygon(segments[j], outline=colors(c, True), width=3)
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / "crops" / names[c] / f"{p.stem}.jpg", BGR=True)
-
+                    label_counter += 1
             # Stream results
             im0 = annotator.result()
             if view_img:
@@ -290,6 +294,7 @@ def parse_opt():
     parser.add_argument("--dnn", action="store_true", help="use OpenCV DNN for ONNX inference")
     parser.add_argument("--vid-stride", type=int, default=1, help="video frame-rate stride")
     parser.add_argument("--retina-masks", action="store_true", help="whether to plot masks in native resolution")
+    parser.add_argument("--alpha", type=float, default=0.1, help="mask transparency")
     opt = parser.parse_args()
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     print_args(vars(opt))
