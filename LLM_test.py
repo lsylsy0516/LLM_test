@@ -46,9 +46,9 @@ if __name__ == '__main__':
                         print(f"LLM Group List in {image_path}: {group_list}")
                         print(f"G.T Group List in {ground_truth_file_path}: {ground_truth_groups}") 
                         if compare_list_of_lists_unordered(group_list, ground_truth_groups):
-                            print("GPT4V Grouping is correct")
+                            print("LLM Grouping is correct")
                             success_cnt += 1
                         else:
-                            print("GPT4V Grouping is incorrect")
+                            print("LLM Grouping is incorrect")
 
     print(f"success rate: {success_cnt}/{total_cnt}")

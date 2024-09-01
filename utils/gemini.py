@@ -81,15 +81,8 @@ def match(text):
     return group_list
 
 
-def test():
-    img = PIL.Image.open("./1.jpg")
-    response = model.generate_content([prompt, img], stream=True)
-    response.resolve()
-    print(response.text)
-    match(response.text)
-
 def handle(image):
-    filename = "saved_image.jpg"
+    filename = "saved_image_gemini.jpg"
     cv2.imwrite(filename, image)
     img = PIL.Image.open(filename)
     response = model.generate_content([prompt, img], stream=True)
@@ -111,6 +104,6 @@ def group(image_path):
     return group
 
 if __name__ == '__main__':
-  img = cv2.imread("saved_image.jpg")
+  img = cv2.imread("saved_image_gemini.jpg")
   handle(img)        
 

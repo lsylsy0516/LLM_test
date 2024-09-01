@@ -77,7 +77,7 @@ def encode_image(image_path):
             return base64.b64encode(image_file.read()).decode('utf-8')
 
 def group(ground_truth_ids:list):
-    image_path = "saved_image.jpg"
+    image_path = "saved_image_claude.jpg"
     base64_image = encode_image(image_path)
     start_time = time.time()
     response = client.messages.create(
@@ -121,12 +121,12 @@ def group(ground_truth_ids:list):
     return match(result_text)
 
 def handle(image,ground_truth_ids):
-    filename = "saved_image.jpg"
+    filename = "saved_image_claude.jpg"
     cv2.imwrite(filename, image)
     return group(ground_truth_ids)
 
 if __name__ == "__main__":
-    path = "saved_image.jpg"
+    path = "saved_image_claude.jpg"
     image = cv2.imread(path)
     if image is None:
         print("Image not found")

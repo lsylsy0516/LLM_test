@@ -38,7 +38,7 @@ def match(text):
     
 
 def group(ground_truth_ids:list):
-	image_path = "saved_image.jpg"
+	image_path = "saved_image_gpt.jpg"
 	base64_image = encode_image(image_path)
 	client = OpenAI()
 	start_time = time.time()
@@ -76,7 +76,7 @@ def group(ground_truth_ids:list):
 	return match(response.choices[0].message.content)
 
 def group_debug(ground_truth_ids:list):
-	image_path = "saved_image.jpg"
+	image_path = "saved_image_gpt.jpg"
 	base64_image = encode_image(image_path)
 	client = OpenAI()
 	start_time = time.time()
@@ -114,7 +114,7 @@ def group_debug(ground_truth_ids:list):
 	return match(response.choices[0].message.content)
 		
 def handle(image,ground_truth_ids):
-    filename = "saved_image.jpg"  
+    filename = "saved_image_gpt.jpg"  
     cv2.imwrite(filename, image)
     return group(ground_truth_ids)
 	
@@ -123,7 +123,7 @@ def handle(image,ground_truth_ids):
 if __name__ == '__main__':
 	try:
 		# path = input("Please input the image path:")
-		path = "saved_image.jpg"
+		path = "saved_image_gpt.jpg"
 		image = cv2.imread(path)
 		if image is None:
 			raise Exception("Image not found")
