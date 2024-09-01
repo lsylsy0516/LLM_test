@@ -98,6 +98,7 @@ def run(
     half=False,  # use FP16 half-precision inference
     dnn=False,  # use OpenCV DNN for ONNX inference
     vid_stride=1,  # video frame-rate stride
+    area_thre=1000,  # area threshold
 ):
     """
     Runs YOLOv5 detection inference on various sources like images, videos, directories, streams, etc.
@@ -225,7 +226,14 @@ def run(
                 if not csv_path.is_file():
                     writer.writeheader()
                 writer.writerow(data)
-
+        
+        for det in pred:
+            if det is not None and len(det):
+                wh = det[:,2:4] - det[:, :2]
+                area = wh[:, 0] * wh[:, 1]  # box area
+                print(f"Area: {area}")
+                det = det[area > area_thre]  # filter small boxes
+        
         # Process predictions
         for i, det in enumerate(pred):  # per image
             seen += 1

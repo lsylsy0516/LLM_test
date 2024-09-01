@@ -45,6 +45,7 @@ def set_detection_parameters(input_source:str,dir:str):
     parser.add_argument('--name', default=dir, help='save results to project/name')
     parser.add_argument('--classes',default='0',nargs='+', type=int, help='filter by class: --classes 0, or --classes 0 2 3')
     parser.add_argument('--source', type=str, default=input_source, help='file/dir/URL/glob, 0 for webcam')
+    parser.add_argument('--area_thre',type=int,default=5000,help='area threshold')
 
     # 解析参数
     opt = parser.parse_args()

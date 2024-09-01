@@ -96,7 +96,8 @@ def run(
     dnn=False,  # use OpenCV DNN for ONNX inference
     vid_stride=1,  # video frame-rate stride
     retina_masks=False,
-    alpha=0.5
+    alpha=0.5,
+    area_thre=100
 ):
     """Run YOLOv5 segmentation inference on diverse sources including images, videos, directories, and streams."""
     source = str(source)
@@ -152,9 +153,12 @@ def run(
 
         # Second-stage classifier (optional)
         # pred = utils.general.apply_classifier(pred, classifier_model, im, im0s)
-
         # Process predictions
         for i, det in enumerate(pred):  # per image
+            if det is not None and len(det):
+                wh = det[:,2:4] - det[:, :2]
+                area = wh[:, 0] * wh[:, 1]  # box area
+                det = det[area > area_thre]  # filter small boxes
             seen += 1
             if webcam:  # batch_size >= 1
                 p, im0, frame = path[i], im0s[i].copy(), dataset.count
